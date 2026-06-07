@@ -8,7 +8,16 @@ export async function POST(req: Request) {
   try {
     if (!process.env.DATABASE_URL) {
       return NextResponse.json(
-        { error: 'Server database configuration is missing.' },
+        {
+          error: 'Server database configuration is missing.',
+          debug: {
+            NODE_ENV: process.env.NODE_ENV,
+            totalEnvVars: Object.keys(process.env).length,
+            hasDb: !!process.env.DATABASE_URL,
+            hasOpenAI: !!process.env.OPENAI_API_KEY,
+            hasSession: !!process.env.SESSION_SECRET,
+          },
+        },
         { status: 500 }
       )
     }
