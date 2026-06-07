@@ -15,7 +15,7 @@ export default function AgentPage() {
   return (
     <ChatShell
       title="AI Agent"
-      subtitle="University search · Cost comparison · Application guide"
+      subtitle="Your research tool for student consultations · University search · Cost comparison · Application guide"
       mode="agent"
     >
       <ChatInterface
@@ -23,7 +23,7 @@ export default function AgentPage() {
         mode="agent"
         placeholder="Ask the agent to search universities, compare costs, or guide your application…"
         emptyHeading="University Education China Agent"
-        emptyBody="I can search our database of 90+ Chinese universities, compare costs, explain application steps, and look up live information."
+        emptyBody="Your research tool for student consultations. I can search our database of 90+ Chinese universities, compare costs, explain application steps, and look up live information."
         suggestions={SUGGESTIONS}
       />
     </ChatShell>
