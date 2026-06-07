@@ -2668,13 +2668,38 @@ function getDegreeLevels(u: University): DegreeLevel[] {
     : ['bachelor', 'master', 'phd']
 }
 
+const DEGREE_KEYWORDS: { keywords: string[]; level: DegreeLevel }[] = [
+  { keywords: ['master', 'masters', 'postgraduate', 'msc', 'mba', 'ma', 'meng'], level: 'master' },
+  { keywords: ['bachelor', 'bachelors', 'undergraduate', 'bsc', 'ba', 'beng'], level: 'bachelor' },
+  { keywords: ['phd', 'doctorate', 'doctoral', 'dphil', 'doctor'], level: 'phd' },
+  { keywords: ['college', 'pre-university', 'foundation', 'preparatory', 'yueke'], level: 'college' },
+]
+
 export function filterUniversities(
   universities: University[],
   filters: UniversityFilters
 ): University[] {
   return universities.filter((u) => {
-    const q = filters.search.toLowerCase()
-    if (q && !u.name.toLowerCase().includes(q) && !u.chineseName.includes(q) && !u.city.toLowerCase().includes(q) && !u.province.toLowerCase().includes(q) && !u.strongPrograms.some((p) => p.toLowerCase().includes(q))) return false
+    if (filters.search) {
+      const q = filters.search.toLowerCase().trim()
+      const levels = getDegreeLevels(u)
+
+      const degreeLevelMatch = DEGREE_KEYWORDS.some(
+        ({ keywords, level }) =>
+          keywords.some((k) => q.includes(k)) && levels.includes(level)
+      )
+
+      const textMatch =
+        u.name.toLowerCase().includes(q) ||
+        u.chineseName.includes(q) ||
+        u.city.toLowerCase().includes(q) ||
+        u.province.toLowerCase().includes(q) ||
+        u.description.toLowerCase().includes(q) ||
+        u.strongPrograms.some((p) => p.toLowerCase().includes(q))
+
+      if (!textMatch && !degreeLevelMatch) return false
+    }
+
     if (filters.province && u.province !== filters.province) return false
     if (filters.types.length > 0 && !filters.types.includes(u.type)) return false
     if (filters.ownership !== 'all' && u.ownership !== filters.ownership) return false

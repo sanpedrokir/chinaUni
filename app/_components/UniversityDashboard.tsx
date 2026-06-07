@@ -75,7 +75,7 @@ export function UniversityDashboard({ user }: { user?: SessionUser }) {
               type="text"
               value={filters.search}
               onChange={(e) => setFilter('search', e.target.value)}
-              placeholder="Search university, city, programme…"
+              placeholder="Search by name, city, programme, or degree level (e.g. master, phd)…"
               className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-9 pr-8 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
             />
             {filters.search && (
