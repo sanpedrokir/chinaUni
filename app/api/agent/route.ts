@@ -22,8 +22,7 @@ const tools = {
         .enum(['research', 'comprehensive', 'technical', 'teacher-training', 'medical', 'language', 'agricultural', 'vocational'])
         .optional()
         .describe('University type'),
-      hasCscScholarship: z.boolean().optional().describe('Only show CSC Government Scholarship universities'),
-      hasEnglishPrograms: z.boolean().optional().describe('Only show universities with English-taught programmes'),
+      degreeLevel: z.enum(['college', 'bachelor', 'master', 'phd']).optional().describe('Programme level: college (pre-university/foundation/语言预科), bachelor, master, or phd'),
       ownership: z.enum(['public', 'private']).optional().describe('Public or private'),
       maxTuition: z.number().optional().describe('Maximum annual tuition in USD'),
       sortBy: z.enum(['qs-rank', 'national-rank', 'name', 'cost-low', 'cost-high']).optional(),
@@ -33,8 +32,7 @@ const tools = {
       query,
       province,
       type,
-      hasCscScholarship,
-      hasEnglishPrograms,
+      degreeLevel,
       ownership,
       maxTuition,
       sortBy = 'qs-rank',
@@ -47,6 +45,7 @@ const tools = {
         ownership: ownership ?? 'all',
         cityCostLevel: 'all',
         minInternationalStudents: 0,
+        degreeLevel: degreeLevel ?? 'all',
       })
 
       const sorted = sortUniversities(filtered, sortBy)
@@ -74,6 +73,15 @@ const tools = {
           hasEnglishPrograms: u.hasEnglishPrograms,
           hasOnlineApplication: u.hasOnlineApplication,
           internationalStudents: u.internationalStudents ?? null,
+          degreeLevels: u.degreeLevels ?? (
+            (u.type === 'teacher-training' || u.type === 'language')
+              ? ['college', 'bachelor', 'master']
+              : (u.type === 'medical' || u.type === 'research')
+                ? ['bachelor', 'master', 'phd']
+                : ((u.nationalRanking ?? 999) > 80)
+                  ? ['college', 'bachelor', 'master']
+                  : ['college', 'bachelor', 'master', 'phd']
+          ),
           strongPrograms: u.strongPrograms,
           applicationDeadline: u.applicationDeadline,
           website: u.website,
@@ -233,17 +241,24 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: openai('gpt-4o'),
-    system: `You are ChinaUni Assistant — an expert AI agent helping international students find and apply to Chinese universities.
+    system: `You are University Education China Assistant — an expert AI agent helping international students find and apply to Chinese universities.
 
-You have access to a database of ~80 Chinese universities with full details on costs, rankings, programmes, scholarships, and application requirements.
+You have access to a database of ~91 Chinese universities with full details on costs, rankings, programmes, scholarships, and application requirements.
+
+DEGREE LEVELS — always identify and pass the correct level when searching:
+- College / Pre-University (预科 yùkē): foundation or preparatory programmes for students who have not yet completed high school or need to meet language/academic entry requirements before enrolling in a degree. Typically 1 year. Entry: junior high school completion or equivalent. When a user mentions "pre-university", "foundation year", "preparatory", "A-level equivalent", "high school student", or "not finished school yet", use degreeLevel: "college". Most comprehensive and technical universities offer this; medical and pure research universities do not.
+- Bachelor's (undergraduate): typically 4 years, entry requirement is high school diploma.
+- Master's (postgraduate): typically 2–3 years, entry requirement is a bachelor's degree. When a user mentions "postgraduate", "grad school", "Masters", "MSc", "MA", or "MBA", use degreeLevel: "master".
+- PhD (doctorate): typically 3–4 years, entry requirement is a master's degree. When they mention "doctorate", "doctoral", "DPhil", or "PhD", use degreeLevel: "phd".
+Not all universities offer PhD programmes to international students — teacher-training and language universities typically only go to master's level. Medical and pure research universities do not run college/pre-university programmes.
 
 Your tools:
-- search_universities — search and filter the university database
-- compare_university_costs — compare total annual costs across universities
+- search_universities — search and filter the university database; always pass degreeLevel when the user specifies a study level
+- compare_university_costs — compare total annual costs across universities (note: Master's/PhD tuition can differ from undergraduate)
 - get_application_info — get application deadlines, documents, and routes for a specific university
 - get_current_datetime — get today's date (useful for deadline calculations)
 - get_weather — check weather in a Chinese city (useful for relocation planning)
-- search_web — search the internet for visa info, student reviews, scholarship news
+- search_web — search the internet for visa info, student reviews, scholarship news, or programme-specific details
 
 Always use your tools to give accurate, data-driven answers. Be specific: quote rankings, costs, deadlines. If a user mentions a budget, use compare_university_costs or search_universities with maxTuition.`,
     messages: await convertToModelMessages(messages, { tools }),

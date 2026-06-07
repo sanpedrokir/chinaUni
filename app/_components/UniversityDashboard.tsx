@@ -45,6 +45,7 @@ export function UniversityDashboard({ user }: { user?: SessionUser }) {
     if (filters.ownership !== 'all') n++
     if (filters.cityCostLevel !== 'all') n++
     if (filters.minInternationalStudents > 0) n++
+    if (filters.degreeLevel !== 'all') n++
     return n
   }, [filters])
 
@@ -178,6 +179,32 @@ export function UniversityDashboard({ user }: { user?: SessionUser }) {
                   </button>
                 </div>
               </div>
+
+              {/* Programme Level filter */}
+              <FilterSection title="Programme Level">
+                <div className="space-y-2">
+                  {([
+                    ['all',     'All levels'],
+                    ['college', 'College (Pre-University)'],
+                    ['bachelor','Bachelor\'s'],
+                    ['master',  'Master\'s'],
+                    ['phd',     'PhD / Doctorate'],
+                  ] as [string, string][]).map(([val, label]) => (
+                    <label key={val} className="flex items-center gap-2 cursor-pointer group">
+                      <input
+                        type="radio"
+                        name="degreeLevel"
+                        checked={filters.degreeLevel === val}
+                        onChange={() => setFilter('degreeLevel', val as UniversityFilters['degreeLevel'])}
+                        className="accent-violet-500 flex-shrink-0"
+                      />
+                      <span className="text-sm text-zinc-400 group-hover:text-zinc-200 transition-colors">
+                        {label}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </FilterSection>
 
               {/* Province */}
               <FilterSection title="Province / City">

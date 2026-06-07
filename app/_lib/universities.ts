@@ -14,6 +14,8 @@ export type CostLevel = 'low' | 'medium' | 'high'
 
 export type ApplicationRoute = 'university-portal' | 'csc' | 'cucas'
 
+export type DegreeLevel = 'college' | 'bachelor' | 'master' | 'phd'
+
 export type Ownership = 'public' | 'private'
 
 // ─── University Interface ──────────────────────────────────────────────────────
@@ -60,6 +62,9 @@ export interface University {
 
   // International students
   internationalStudents?: number // approximate headcount
+
+  // Degree levels offered to international students
+  degreeLevels?: DegreeLevel[] // defaults to all three if omitted
 }
 
 // ─── Filter Interface ──────────────────────────────────────────────────────────
@@ -71,6 +76,7 @@ export interface UniversityFilters {
   ownership: Ownership | 'all'
   cityCostLevel: CostLevel | 'all'
   minInternationalStudents: number  // 0 = no filter
+  degreeLevel: DegreeLevel | 'all'
 }
 
 export const DEFAULT_FILTERS: UniversityFilters = {
@@ -80,6 +86,7 @@ export const DEFAULT_FILTERS: UniversityFilters = {
   ownership: 'all',
   cityCostLevel: 'all',
   minInternationalStudents: 0,
+  degreeLevel: 'all',
 }
 
 export type SortOrder = 'qs-rank' | 'national-rank' | 'name' | 'cost-low' | 'cost-high'
@@ -2639,6 +2646,28 @@ export const UNIVERSITIES: University[] = [
 
 // ─── Helper Functions ──────────────────────────────────────────────────────────
 
+function getDegreeLevels(u: University): DegreeLevel[] {
+  if (u.degreeLevels) return u.degreeLevels
+
+  // Medical and pure research universities don't run pre-university/foundation programmes
+  const hasCollege = u.type !== 'medical' && u.type !== 'research'
+
+  // Teacher-training and language institutes: college + bachelor + master (no international PhD)
+  if (u.type === 'teacher-training' || u.type === 'language') {
+    return ['college', 'bachelor', 'master']
+  }
+
+  // Lower-ranked non-research/non-medical universities: college + bachelor + master
+  if ((u.nationalRanking ?? 999) > 80 && u.type !== 'research' && u.type !== 'medical') {
+    return ['college', 'bachelor', 'master']
+  }
+
+  // Top-tier comprehensive, technical, agricultural: all levels including college (预科)
+  return hasCollege
+    ? ['college', 'bachelor', 'master', 'phd']
+    : ['bachelor', 'master', 'phd']
+}
+
 export function filterUniversities(
   universities: University[],
   filters: UniversityFilters
@@ -2651,6 +2680,7 @@ export function filterUniversities(
     if (filters.ownership !== 'all' && u.ownership !== filters.ownership) return false
     if (filters.cityCostLevel !== 'all' && u.cityCostLevel !== filters.cityCostLevel) return false
     if (filters.minInternationalStudents > 0 && (u.internationalStudents ?? 0) < filters.minInternationalStudents) return false
+    if (filters.degreeLevel !== 'all' && !getDegreeLevels(u).includes(filters.degreeLevel)) return false
     return true
   })
 }
