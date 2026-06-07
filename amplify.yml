@@ -6,9 +6,7 @@ frontend:
         - npm ci
     build:
       commands:
-        - echo "DATABASE_URL set=$( [ -n "$DATABASE_URL" ] && echo YES || echo NO )"
-        - echo "OPENAI_API_KEY set=$( [ -n "$OPENAI_API_KEY" ] && echo YES || echo NO )"
-        - echo "SESSION_SECRET set=$( [ -n "$SESSION_SECRET" ] && echo YES || echo NO )"
+        - node -e "require('fs').writeFileSync('app/_lib/runtime-config.ts', 'export const RUNTIME_CONFIG: Record<string, string> = ' + JSON.stringify({DATABASE_URL:process.env.DATABASE_URL||'',OPENAI_API_KEY:process.env.OPENAI_API_KEY||'',SESSION_SECRET:process.env.SESSION_SECRET||'',RESEND_API_KEY:process.env.RESEND_API_KEY||'',RESEND_FROM:process.env.RESEND_FROM||'',TAVILY_API_KEY:process.env.TAVILY_API_KEY||''}) + '\n')"
         - npm run build
   artifacts:
     baseDirectory: .next
