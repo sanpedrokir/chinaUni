@@ -13,6 +13,7 @@ export default function ChatPage() {
     <ChatShell
       title="AI Chat"
       subtitle="Powered by GPT-4o · History persisted"
+      mode="chat"
     >
       <ChatInterface
         api="/api/chat"

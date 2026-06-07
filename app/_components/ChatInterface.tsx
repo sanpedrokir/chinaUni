@@ -330,11 +330,11 @@ function EmptyState({
       {/* Icon */}
       {mode === 'agent' ? (
         <div className="relative">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-violet-600 to-violet-800 flex items-center justify-center shadow-lg shadow-violet-900/40">
-            <Bot size={40} className="text-white" />
+          <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-violet-600 to-violet-800 flex items-center justify-center shadow-xl shadow-violet-900/50">
+            <Bot size={72} className="text-white" />
           </div>
           {/* Pulse ring */}
-          <div className="absolute inset-0 rounded-2xl border-2 border-violet-500/40 animate-ping" />
+          <div className="absolute inset-0 rounded-3xl border-2 border-violet-500/40 animate-ping" />
         </div>
       ) : (
         <div className="w-16 h-16 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center">

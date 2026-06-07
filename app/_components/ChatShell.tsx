@@ -1,16 +1,17 @@
 'use client'
 
 import { useState } from 'react'
-import { Menu } from 'lucide-react'
+import { Menu, Bot, MessageSquare } from 'lucide-react'
 import { Sidebar } from './Sidebar'
 
 interface ChatShellProps {
   title: string
   subtitle: string
+  mode?: 'chat' | 'agent'
   children: React.ReactNode
 }
 
-export function ChatShell({ title, subtitle, children }: ChatShellProps) {
+export function ChatShell({ title, subtitle, mode, children }: ChatShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
@@ -27,6 +28,16 @@ export function ChatShell({ title, subtitle, children }: ChatShellProps) {
           >
             <Menu size={20} />
           </button>
+          {mode === 'agent' && (
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-600 to-violet-800 flex items-center justify-center flex-shrink-0 shadow-md shadow-violet-900/40">
+              <Bot size={20} className="text-white" />
+            </div>
+          )}
+          {mode === 'chat' && (
+            <div className="w-9 h-9 rounded-xl bg-zinc-800 border border-zinc-700 flex items-center justify-center flex-shrink-0">
+              <MessageSquare size={18} className="text-violet-400" />
+            </div>
+          )}
           <div className="min-w-0">
             <h1 className="font-semibold text-zinc-900 dark:text-zinc-100 leading-none">
               {title}

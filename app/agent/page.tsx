@@ -16,6 +16,7 @@ export default function AgentPage() {
     <ChatShell
       title="AI Agent"
       subtitle="University search · Cost comparison · Application guide"
+      mode="agent"
     >
       <ChatInterface
         api="/api/agent"
