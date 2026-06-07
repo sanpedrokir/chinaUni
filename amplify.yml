@@ -6,7 +6,7 @@ frontend:
         - npm ci
     build:
       commands:
-        - node -e "require('fs').writeFileSync('app/_lib/runtime-config.ts', 'export const RUNTIME_CONFIG: Record<string, string> = ' + JSON.stringify({DATABASE_URL:process.env.DATABASE_URL||'',OPENAI_API_KEY:process.env.OPENAI_API_KEY||'',SESSION_SECRET:process.env.SESSION_SECRET||'',RESEND_API_KEY:process.env.RESEND_API_KEY||'',RESEND_FROM:process.env.RESEND_FROM||'',TAVILY_API_KEY:process.env.TAVILY_API_KEY||''}) + '\n')"
+        - node scripts/gen-runtime-config.js
         - npm run build
   artifacts:
     baseDirectory: .next
