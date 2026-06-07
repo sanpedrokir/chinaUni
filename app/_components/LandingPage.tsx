@@ -1,0 +1,317 @@
+'use client'
+
+import { useSearchParams, useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { AlertCircle, CheckCircle2, Loader2, GraduationCap } from 'lucide-react'
+
+const COUNTRIES = [
+  'Afghanistan', 'Albania', 'Algeria', 'Angola', 'Argentina', 'Australia',
+  'Austria', 'Azerbaijan', 'Bangladesh', 'Belgium', 'Bolivia', 'Brazil',
+  'Cambodia', 'Cameroon', 'Canada', 'Chile', 'Colombia', 'Congo', 'Cuba',
+  'Denmark', 'Ecuador', 'Egypt', 'Ethiopia', 'Finland', 'France', 'Germany',
+  'Ghana', 'Greece', 'Guatemala', 'Hungary', 'India', 'Indonesia', 'Iran',
+  'Iraq', 'Israel', 'Italy', 'Japan', 'Jordan', 'Kazakhstan', 'Kenya',
+  'South Korea', 'Kuwait', 'Laos', 'Lebanon', 'Liberia', 'Libya', 'Malaysia',
+  'Mali', 'Mexico', 'Mongolia', 'Morocco', 'Mozambique', 'Myanmar', 'Nepal',
+  'Netherlands', 'New Zealand', 'Nigeria', 'Norway', 'Oman', 'Pakistan',
+  'Palestine', 'Peru', 'Philippines', 'Poland', 'Portugal', 'Qatar', 'Romania',
+  'Russia', 'Rwanda', 'Saudi Arabia', 'Senegal', 'Sierra Leone', 'Singapore',
+  'Somalia', 'South Africa', 'Spain', 'Sri Lanka', 'Sudan', 'Sweden',
+  'Switzerland', 'Syria', 'Tanzania', 'Thailand', 'Tunisia', 'Turkey',
+  'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States',
+  'Uruguay', 'Uzbekistan', 'Venezuela', 'Vietnam', 'Yemen', 'Zambia', 'Zimbabwe',
+  'Other',
+]
+
+type EnquiryState = { name: string; email: string; contact: string; country: string; message: string }
+type FormStatus = 'idle' | 'loading' | 'success' | 'error'
+
+export function LandingPage() {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const authRequired = searchParams.get('auth') === 'required'
+
+  const [enquiry, setEnquiry] = useState<EnquiryState>({
+    name: '', email: '', contact: '', country: '', message: '',
+  })
+  const [enquiryStatus, setEnquiryStatus] = useState<FormStatus>('idle')
+  const [enquiryError, setEnquiryError] = useState('')
+
+  const [creds, setCreds] = useState({ username: '', password: '' })
+  const [loginStatus, setLoginStatus] = useState<'idle' | 'loading' | 'error'>('idle')
+  const [loginError, setLoginError] = useState('')
+
+  async function submitEnquiry(e: React.FormEvent) {
+    e.preventDefault()
+    setEnquiryStatus('loading')
+    setEnquiryError('')
+    try {
+      const res = await fetch('/api/enquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: enquiry.name,
+          email: enquiry.email,
+          contactNumber: enquiry.contact,
+          country: enquiry.country,
+          message: enquiry.message,
+        }),
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        setEnquiryError(data.error ?? 'Something went wrong. Please try again.')
+        setEnquiryStatus('error')
+      } else {
+        setEnquiryStatus('success')
+        setEnquiry({ name: '', email: '', contact: '', country: '', message: '' })
+      }
+    } catch {
+      setEnquiryError('Network error. Please try again.')
+      setEnquiryStatus('error')
+    }
+  }
+
+  async function submitLogin(e: React.FormEvent) {
+    e.preventDefault()
+    setLoginStatus('loading')
+    setLoginError('')
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(creds),
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        setLoginError(data.error ?? 'Invalid credentials.')
+        setLoginStatus('error')
+      } else {
+        router.push('/search')
+      }
+    } catch {
+      setLoginError('Network error. Please try again.')
+      setLoginStatus('error')
+    }
+  }
+
+  const inputClass =
+    'w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition'
+
+  return (
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col">
+      {/* Header */}
+      <header className="border-b border-zinc-800 px-6 py-4 flex-shrink-0">
+        <div className="max-w-6xl mx-auto flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center flex-shrink-0">
+            <GraduationCap size={18} className="text-white" />
+          </div>
+          <div>
+            <span className="text-lg font-bold tracking-tight text-white">University Education China</span>
+            <span className="hidden sm:inline text-zinc-500 text-sm ml-3">
+              Study in China — University Consultation
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 py-10">
+        {/* Auth required notice */}
+        {authRequired && (
+          <div className="flex items-center gap-2 rounded-xl border border-amber-600/40 bg-amber-950/30 px-4 py-3 text-amber-300 text-sm mb-8">
+            <AlertCircle size={16} className="flex-shrink-0" />
+            Please log in to access the university search and AI tools.
+          </div>
+        )}
+
+        {/* Hero */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-white mb-4 leading-tight">
+            Expert guidance for international students navigating admissions, scholarships, and campus life at Chinese universities.
+          </h1>
+
+        </div>
+
+        {/* Two-panel layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          {/* ── Enquiry form ── */}
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 sm:p-8">
+            <h2 className="text-xl font-semibold text-white mb-1">Request For Consultation</h2>
+            <p className="text-zinc-500 text-sm mb-6">
+              Tell us about yourself and we&apos;ll reach out within 24 hours.
+            </p>
+
+            {enquiryStatus === 'success' ? (
+              <div className="flex flex-col items-center justify-center py-10 gap-4 text-center">
+                <div className="w-16 h-16 rounded-full bg-emerald-950 border border-emerald-700 flex items-center justify-center">
+                  <CheckCircle2 size={32} className="text-emerald-400" />
+                </div>
+                <div>
+                  <p className="text-white font-semibold text-lg">Enquiry Submitted!</p>
+                  <p className="text-zinc-400 text-sm mt-1 max-w-xs leading-relaxed">
+                    Our team has been notified and will contact you soon.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setEnquiryStatus('idle')}
+                  className="text-sm text-violet-400 hover:text-violet-300 transition-colors underline underline-offset-2"
+                >
+                  Submit another enquiry
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={submitEnquiry} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-medium text-zinc-400 mb-1.5">
+                    Full Name <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={enquiry.name}
+                    onChange={(e) => setEnquiry((p) => ({ ...p, name: e.target.value }))}
+                    placeholder="Your full name"
+                    required
+                    className={inputClass}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-zinc-400 mb-1.5">
+                    Email Address <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    value={enquiry.email}
+                    onChange={(e) => setEnquiry((p) => ({ ...p, email: e.target.value }))}
+                    placeholder="you@example.com"
+                    required
+                    className={inputClass}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-zinc-400 mb-1.5">
+                    Contact Number
+                  </label>
+                  <input
+                    type="tel"
+                    value={enquiry.contact}
+                    onChange={(e) => setEnquiry((p) => ({ ...p, contact: e.target.value }))}
+                    placeholder="+1 555 000 0000"
+                    className={inputClass}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-zinc-400 mb-1.5">
+                    Country <span className="text-red-400">*</span>
+                  </label>
+                  <select
+                    value={enquiry.country}
+                    onChange={(e) => setEnquiry((p) => ({ ...p, country: e.target.value }))}
+                    required
+                    className={`${inputClass} appearance-none`}
+                  >
+                    <option value="">Select your country…</option>
+                    {COUNTRIES.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-zinc-400 mb-1.5">
+                    Message <span className="text-zinc-600">(optional)</span>
+                  </label>
+                  <textarea
+                    value={enquiry.message}
+                    onChange={(e) => setEnquiry((p) => ({ ...p, message: e.target.value }))}
+                    placeholder="Tell us about your study goals, preferred universities, or any questions…"
+                    rows={3}
+                    className={`${inputClass} resize-none`}
+                  />
+                </div>
+
+                {enquiryStatus === 'error' && (
+                  <div className="flex items-start gap-2 rounded-xl border border-red-800/50 bg-red-950/30 px-3 py-2.5 text-red-400 text-sm">
+                    <AlertCircle size={15} className="flex-shrink-0 mt-0.5" />
+                    {enquiryError}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={enquiryStatus === 'loading'}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-violet-600 hover:bg-violet-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium py-3 text-sm transition-colors"
+                >
+                  {enquiryStatus === 'loading' && <Loader2 size={15} className="animate-spin" />}
+                  {enquiryStatus === 'loading' ? 'Submitting…' : 'Submit Enquiry'}
+                </button>
+              </form>
+            )}
+          </div>
+
+          {/* ── Login form ── */}
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 sm:p-8 lg:sticky lg:top-8">
+            <h2 className="text-xl font-semibold text-white mb-1">Staff Login</h2>
+            <p className="text-zinc-500 text-sm mb-6">
+              Access the university search and AI tools.
+            </p>
+
+            <form onSubmit={submitLogin} className="space-y-4">
+              <div>
+                <label className="block text-xs font-medium text-zinc-400 mb-1.5">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  value={creds.username}
+                  onChange={(e) => setCreds((p) => ({ ...p, username: e.target.value }))}
+                  placeholder="your username"
+                  required
+                  autoComplete="username"
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-zinc-400 mb-1.5">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={creds.password}
+                  onChange={(e) => setCreds((p) => ({ ...p, password: e.target.value }))}
+                  placeholder="••••••••"
+                  required
+                  autoComplete="current-password"
+                  className={inputClass}
+                />
+              </div>
+
+              {loginStatus === 'error' && (
+                <div className="flex items-start gap-2 rounded-xl border border-red-800/50 bg-red-950/30 px-3 py-2.5 text-red-400 text-sm">
+                  <AlertCircle size={15} className="flex-shrink-0 mt-0.5" />
+                  {loginError}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loginStatus === 'loading'}
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-zinc-700 hover:bg-zinc-600 disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium py-3 text-sm transition-colors"
+              >
+                {loginStatus === 'loading' && <Loader2 size={15} className="animate-spin" />}
+                {loginStatus === 'loading' ? 'Signing in…' : 'Sign In'}
+              </button>
+            </form>
+
+          </div>
+        </div>
+      </main>
+
+      <footer className="border-t border-zinc-800 px-6 py-4 text-center text-xs text-zinc-600 flex-shrink-0">
+        &copy; {new Date().getFullYear()} University Education China · Helping international students study in China
+      </footer>
+    </div>
+  )
+}
