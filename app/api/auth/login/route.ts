@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   const rows = await sql`
     SELECT id, username, email, password_hash
     FROM admin_users
-    WHERE username = ${username.trim().toLowerCase()}
+    WHERE LOWER(username) = ${username.trim().toLowerCase()}
     LIMIT 1
   `
 
