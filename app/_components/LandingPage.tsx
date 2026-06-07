@@ -299,12 +299,12 @@ export function LandingPage() {
           )}
 
           <div className="flex items-center justify-between">
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs font-semibold text-zinc-800">
               &copy; {new Date().getFullYear()} University Education China · Helping international students study in China
             </p>
             <button
               onClick={() => setShowLogin((v) => !v)}
-              className="text-xs text-zinc-400 hover:text-zinc-600 transition-colors"
+              className="text-xs font-bold text-zinc-900 hover:text-zinc-600 transition-colors"
             >
               {showLogin ? 'Cancel' : 'Staff Login'}
             </button>
