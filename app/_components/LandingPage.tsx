@@ -130,7 +130,7 @@ export function LandingPage() {
             Expert guidance for international students navigating admissions, scholarships, and campus life at Chinese universities.
           </h1>
           <p className="text-sm font-medium text-violet-600 tracking-widest uppercase">
-            University Education China · Helping international students study in China
+            Helping international students study in China
           </p>
         </div>
 
