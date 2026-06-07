@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs'
 import { sql } from '../../../_lib/db'
 import { createSession, setSessionCookie } from '../../../_lib/auth'
 
+export const runtime = 'nodejs'
+
 export async function POST(req: Request) {
   const { username, password } = await req.json()
 

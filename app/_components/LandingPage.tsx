@@ -96,18 +96,18 @@ export function LandingPage() {
   }
 
   const inputClass =
-    'w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition'
+    'w-full rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500 transition'
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col">
+    <div className="min-h-screen bg-white text-zinc-900 flex flex-col">
       {/* Header */}
-      <header className="border-b border-zinc-800 px-6 py-4 flex-shrink-0">
-        <div className="max-w-6xl mx-auto flex items-center gap-3">
+      <header className="border-b border-zinc-200 px-6 py-4 flex-shrink-0">
+        <div className="max-w-6xl mx-auto flex items-center justify-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center flex-shrink-0">
             <GraduationCap size={18} className="text-white" />
           </div>
-          <div>
-            <span className="text-lg font-bold tracking-tight text-white">University Education China</span>
+          <div className="text-center">
+            <span className="text-lg font-bold tracking-tight text-zinc-900">University Education China</span>
             <span className="hidden sm:inline text-zinc-500 text-sm ml-3">
               Study in China — University Consultation
             </span>
@@ -118,7 +118,7 @@ export function LandingPage() {
       <main className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 py-10">
         {/* Auth required notice */}
         {authRequired && (
-          <div className="flex items-center gap-2 rounded-xl border border-amber-600/40 bg-amber-950/30 px-4 py-3 text-amber-300 text-sm mb-8">
+          <div className="flex items-center gap-2 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-amber-700 text-sm mb-8">
             <AlertCircle size={16} className="flex-shrink-0" />
             Please log in to access the university search and AI tools.
           </div>
@@ -126,35 +126,35 @@ export function LandingPage() {
 
         {/* Hero */}
         <div className="text-center mb-10">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-3 leading-tight">
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-900 mb-3 leading-tight">
             Expert guidance for international students navigating admissions, scholarships, and campus life at Chinese universities.
           </h1>
-          <p className="text-sm font-medium text-violet-400 tracking-widest uppercase">
+          <p className="text-sm font-medium text-violet-600 tracking-widest uppercase">
             University Education China · Helping international students study in China
           </p>
         </div>
 
         {/* Enquiry form */}
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 sm:p-8">
-          <h2 className="text-xl font-semibold text-white mb-1">Request For Consultation</h2>
+        <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 sm:p-8">
+          <h2 className="text-xl font-semibold text-zinc-900 mb-1">Request For Consultation</h2>
           <p className="text-zinc-500 text-sm mb-6">
             Tell us about yourself and we&apos;ll reach out within 24 hours.
           </p>
 
           {enquiryStatus === 'success' ? (
             <div className="flex flex-col items-center justify-center py-10 gap-4 text-center">
-              <div className="w-16 h-16 rounded-full bg-emerald-950 border border-emerald-700 flex items-center justify-center">
-                <CheckCircle2 size={32} className="text-emerald-400" />
+              <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-300 flex items-center justify-center">
+                <CheckCircle2 size={32} className="text-emerald-600" />
               </div>
               <div>
-                <p className="text-white font-semibold text-lg">Enquiry Submitted!</p>
-                <p className="text-zinc-400 text-sm mt-1 max-w-xs leading-relaxed">
+                <p className="text-zinc-900 font-semibold text-lg">Enquiry Submitted!</p>
+                <p className="text-zinc-500 text-sm mt-1 max-w-xs leading-relaxed">
                   Our team has been notified and will contact you soon.
                 </p>
               </div>
               <button
                 onClick={() => setEnquiryStatus('idle')}
-                className="text-sm text-violet-400 hover:text-violet-300 transition-colors underline underline-offset-2"
+                className="text-sm text-violet-600 hover:text-violet-700 transition-colors underline underline-offset-2"
               >
                 Submit another enquiry
               </button>
@@ -162,8 +162,8 @@ export function LandingPage() {
           ) : (
             <form onSubmit={submitEnquiry} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-1.5">
-                  Full Name <span className="text-red-400">*</span>
+                <label className="block text-xs font-medium text-zinc-600 mb-1.5">
+                  Full Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -176,8 +176,8 @@ export function LandingPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-1.5">
-                  Email Address <span className="text-red-400">*</span>
+                <label className="block text-xs font-medium text-zinc-600 mb-1.5">
+                  Email Address <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="email"
@@ -190,7 +190,7 @@ export function LandingPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-1.5">
+                <label className="block text-xs font-medium text-zinc-600 mb-1.5">
                   Contact Number
                 </label>
                 <input
@@ -203,8 +203,8 @@ export function LandingPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-1.5">
-                  Country <span className="text-red-400">*</span>
+                <label className="block text-xs font-medium text-zinc-600 mb-1.5">
+                  Country <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={enquiry.country}
@@ -220,8 +220,8 @@ export function LandingPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-1.5">
-                  Message <span className="text-zinc-600">(optional)</span>
+                <label className="block text-xs font-medium text-zinc-600 mb-1.5">
+                  Message <span className="text-zinc-400">(optional)</span>
                 </label>
                 <textarea
                   value={enquiry.message}
@@ -233,7 +233,7 @@ export function LandingPage() {
               </div>
 
               {enquiryStatus === 'error' && (
-                <div className="flex items-start gap-2 rounded-xl border border-red-800/50 bg-red-950/30 px-3 py-2.5 text-red-400 text-sm">
+                <div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-red-600 text-sm">
                   <AlertCircle size={15} className="flex-shrink-0 mt-0.5" />
                   {enquiryError}
                 </div>
@@ -253,13 +253,13 @@ export function LandingPage() {
       </main>
 
       {/* Footer with subtle staff login */}
-      <footer className="border-t border-zinc-800 px-6 py-6 flex-shrink-0">
+      <footer className="border-t border-zinc-200 px-6 py-6 flex-shrink-0">
         <div className="max-w-3xl mx-auto">
           {/* Staff login — expands inline when clicked */}
           {showLogin && (
-            <div className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
+            <div className="mb-6 rounded-xl border border-zinc-200 bg-zinc-50 p-5">
               <form onSubmit={submitLogin} className="space-y-3">
-                <p className="text-xs font-medium text-zinc-500 uppercase tracking-widest mb-3">Staff Login</p>
+                <p className="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-3">Staff Login</p>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <input
                     type="text"
@@ -268,7 +268,7 @@ export function LandingPage() {
                     placeholder="Username"
                     required
                     autoComplete="username"
-                    className="flex-1 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition"
+                    className="flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500 transition"
                   />
                   <input
                     type="password"
@@ -277,19 +277,19 @@ export function LandingPage() {
                     placeholder="Password"
                     required
                     autoComplete="current-password"
-                    className="flex-1 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition"
+                    className="flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500 transition"
                   />
                   <button
                     type="submit"
                     disabled={loginStatus === 'loading'}
-                    className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-zinc-700 hover:bg-zinc-600 disabled:opacity-50 text-white text-sm font-medium transition-colors flex-shrink-0"
+                    className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 text-white text-sm font-medium transition-colors flex-shrink-0"
                   >
                     {loginStatus === 'loading' && <Loader2 size={13} className="animate-spin" />}
                     {loginStatus === 'loading' ? 'Signing in…' : 'Sign In'}
                   </button>
                 </div>
                 {loginStatus === 'error' && (
-                  <p className="text-xs text-red-400 flex items-center gap-1.5">
+                  <p className="text-xs text-red-500 flex items-center gap-1.5">
                     <AlertCircle size={12} />
                     {loginError}
                   </p>
@@ -299,12 +299,12 @@ export function LandingPage() {
           )}
 
           <div className="flex items-center justify-between">
-            <p className="text-xs text-zinc-600">
+            <p className="text-xs text-zinc-400">
               &copy; {new Date().getFullYear()} University Education China · Helping international students study in China
             </p>
             <button
               onClick={() => setShowLogin((v) => !v)}
-              className="text-xs text-zinc-700 hover:text-zinc-500 transition-colors"
+              className="text-xs text-zinc-400 hover:text-zinc-600 transition-colors"
             >
               {showLogin ? 'Cancel' : 'Staff Login'}
             </button>

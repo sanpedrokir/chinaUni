@@ -53,6 +53,29 @@ CREATE INDEX IF NOT EXISTS idx_messages_conversation_id
 CREATE INDEX IF NOT EXISTS idx_messages_created_at
   ON messages(created_at);
 
+-- ── Admin users (staff login) ───────────────────────────────────
+CREATE TABLE IF NOT EXISTS admin_users (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  username      VARCHAR(100) UNIQUE NOT NULL,
+  email         VARCHAR(255) UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  created_at    TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ── Student enquiries ───────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS enquiries (
+  id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name           VARCHAR(255) NOT NULL,
+  email          VARCHAR(255) NOT NULL,
+  contact_number VARCHAR(50),
+  country        VARCHAR(100) NOT NULL,
+  message        TEXT,
+  created_at     TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_enquiries_created_at
+  ON enquiries(created_at DESC);
+
 -- ── Tool Calls ─────────────────────────────────────────────
 -- Tracks every tool invocation made by the AI agent.
 -- status: 'pending' | 'running' | 'completed' | 'failed'
