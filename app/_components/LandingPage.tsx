@@ -126,12 +126,12 @@ export function LandingPage() {
 
         {/* Hero */}
         <div className="text-center mb-10">
-          <p className="text-sm font-medium text-violet-400 tracking-widest uppercase mb-4">
-            University Education China · Helping international students study in China
-          </p>
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-white mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-3 leading-tight">
             Expert guidance for international students navigating admissions, scholarships, and campus life at Chinese universities.
           </h1>
+          <p className="text-sm font-medium text-violet-400 tracking-widest uppercase">
+            University Education China · Helping international students study in China
+          </p>
         </div>
 
         {/* Enquiry form */}
